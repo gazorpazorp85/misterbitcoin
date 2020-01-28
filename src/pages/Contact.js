@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-// import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import ContactList from '../cmps/Contact/ContactList';
 import ContactFilter from '../cmps/Contact/ContactFilter';
@@ -35,8 +35,13 @@ export default class ContactPage extends Component {
         return (
             <div className="overflow full flex column">
                 <div className="flex column justify-center main-container">
-                        <h1 className="flex center">Contacts</h1>
-                    <ContactFilter onFilter={this.onFilter} filterBy={this.state.filterBy} />
+                    <h1 className="flex center">Contacts</h1>
+                    <div className="flex space-between align-center">
+                        <div className="button pointer add-contact-btn">
+                            <Link className="capitalize" to={`/contact/edit`}>add contact</Link>
+                        </div>
+                        <ContactFilter onFilter={this.onFilter} filterBy={this.state.filterBy} />
+                    </div>
                     <ContactList contacts={this.state.contacts} />
                 </div>
             </div>

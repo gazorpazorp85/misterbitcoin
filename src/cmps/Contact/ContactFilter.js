@@ -3,7 +3,6 @@ import React, { Component } from 'react'
 export default class ContactFilter extends Component {
 
     inputChange = (ev) => {
-        // let field = ev.target.name;
         let value = ev.target.value;
         this.props.onFilter({ term: value });
     }

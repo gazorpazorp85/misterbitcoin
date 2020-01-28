@@ -102,6 +102,14 @@ a {
   flex: 1;
 }
 
+.order-0 {
+  order: 0;
+}
+
+.order-1 {
+  order: 1;
+}
+
 .pointer {
   cursor: pointer;
 }
@@ -131,17 +139,17 @@ a {
 }
 
 .active {
-    color: white;
+  color: white;
 }
 
 .button {
-    text-align: center;
-    height: 40px;
-    line-height: 40px;
-    width: 150px;
-    border-radius: 20px;
-    border: 2px solid black;
-    margin: 10px;
+  text-align: center;
+  height: 40px;
+  line-height: 40px;
+  width: 150px;
+  border-radius: 20px;
+  border: 2px solid black;
+  margin: 10px;
 }
 
 input {
@@ -183,7 +191,7 @@ input {
 }
 
 .center-container {
-    width: 350px;
+  width: 350px;
 }
 
 .cards-container {
@@ -193,12 +201,22 @@ input {
 }
 
 .cards-container:last-child {
-    margin-bottom: 10px;
+  margin-bottom: 10px;
 }
 
 .filter-container {
   margin-bottom: 10px;
 }
+
+.filter-container input {
+  display: flex;
+}
+
+.contact-buttons-container {
+  width: 600px;
+}
+
+
 
 /* cmps and pages */
 
@@ -213,8 +231,12 @@ input {
 }
 
 .main-title {
-    font-weight: 500;
-    font-size: 6.25rem;
+  font-weight: 500;
+  font-size: 6.25rem;
+}
+
+.contact-form input {
+  margin-bottom: 20px;
 }
 
 .footer {
@@ -234,16 +256,23 @@ input {
 /* contact details */
 
 .img-container {
-    margin-top: 3.125rem;
-    width: 21.875rem;
+  margin-top: 3.125rem;
+  width: 21.875rem;
 }
 
 .contact-btn {
-    margin-top: 20px;
+  margin-top: 20px;
+}
+
+.add-contact-btn {
+  margin-bottom: 25px;
+  height: 45px;
 }
 
 .img-details-container {
-    margin-top: 6.25rem;
+  margin-top: 3.125rem;
+  height: 300px;
+  width: 18.75rem;
 }
 
 /* media-queries */
