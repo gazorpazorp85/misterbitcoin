@@ -5,16 +5,17 @@ export default class ContactFilter extends Component {
     inputChange = (ev) => {
         // let field = ev.target.name;
         let value = ev.target.value;
-        this.props.onFilter({ term: value});
+        this.props.onFilter({ term: value });
     }
 
     render() {
-        return <div>
-            <div>
-                <input type='text' placeholder='Search by Name, Phone or Email' value={this.props.filterBy.term}
-                    onChange={this.inputChange} name='name'></input>
-            </div>
-            {/* <div>
+        return (
+            <div className="filter-container">
+                <div className="filter-container flex center">
+                    <input type='text' placeholder='Search by Name, Phone or Email' value={this.props.filterBy.term}
+                        onChange={this.inputChange} name='name'></input>
+                </div>
+                {/* <div>
                 <input type='text' placeholder='Search by Email' value={this.props.filterBy.email}
                     onChange={this.inputChange} name='email'></input>
             </div>
@@ -22,6 +23,7 @@ export default class ContactFilter extends Component {
                 <input type='text' placeholder='Search by Phone' value={this.props.filterBy.phone}
                     onChange={this.inputChange} name='phone'></input>
             </div> */}
-        </div>
+            </div>
+        )
     }
 }
