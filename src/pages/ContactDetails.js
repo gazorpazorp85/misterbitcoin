@@ -1,63 +1,63 @@
-import React, { Component } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { observer, inject } from 'mobx-react';
+import { useObserver } from 'mobx-react';
 
-@inject('ContactStore')
-@observer class ContactDetails extends Component {
+import StoreContext from '../store';
 
-    componentDidMount() {
-        this.loadContact();
-    }
+export default function ContactDetails(props) {
 
-    componentDidUpdate(prevProps) {
-        if (prevProps.match.params.id
-            !== this.props.match.params.id) {
-            this.loadContact();
+    const ContactStore = useContext(StoreContext).ContactStore;
+    const [id, setId] = useState('');
+    const [contact, setContact] = useState('');
+
+    const load = async () => {
+        const id = props.match.params.id;
+        try {
+            await ContactStore.getContactById(id);
+            const contact = ContactStore.currContact;
+            setId(id);
+            setContact(contact);
+        } catch (err) {
+            console.log(err);
         }
     }
 
-    loadContact = () => {
-        const { id } = this.props.match.params;
-        this.props.ContactStore.getContactById(id)
-        
+    useEffect(() => {
+        load();
+    }, [props.match.params.id])
+
+    const onDelete = async () => {
+        await ContactStore.deleteContact(id);
+        props.history.push('/contact');
     }
 
-    goBack = () => {
-        this.props.history.push('/contact');
+    const onBack = () => {
+        props.history.push('/contact');
     }
 
-    onDelete = async () => {
-        const { _id } = this.props.ContactStore.currContact;
-        await this.props.ContactStore.deleteContact(_id);
-        this.props.history.push('/contact');
-    }
-
-    render() {
-        const { _id, name, email, phone } = this.props.ContactStore.currContact;
+    return useObserver(() => {
         return (
             <div className="flex column full main-container">
                 <div className="flex center order-0">
                     <div className="flex column align-center img-container">
-                        <img src={`https://robohash.org/${_id}.png`} alt={`${name}`} />
+                        <img src={`https://robohash.org/${contact._id}.png`} alt={`${contact.name}`} />
                     </div>
                     <div>
                         <div className="flex column center align-center img-details-container">
-                            <h2>name: {name}</h2>
-                            <h4>email: {email}</h4>
-                            <h4>phone: {phone}</h4>
+                            <h2>name: {contact.name}</h2>
+                            <h4>email: {contact.email}</h4>
+                            <h4>phone: {contact.phone}</h4>
                         </div>
                     </div>
                 </div>
                 <div className="flex center order-1 contact-buttons-container main-container">
-                    <div className="capitalize button pointer contact-btn" onClick={this.goBack}>back to list</div>
+                    <div className="capitalize button pointer contact-btn" onClick={onBack}>back to list</div>
                     <div className="button pointer contact-btn">
-                        <Link className="capitalize" to={`/contact/edit/${_id}`}>edit details</Link>
+                        <Link className="capitalize" to={`/contact/edit/${contact._id}`}>edit details</Link>
                     </div>
-                    <div className="capitalize button pointer contact-btn" onClick={this.onDelete}>delete contact</div>
+                    <div className="capitalize button pointer contact-btn" onClick={onDelete}>delete contact</div>
                 </div>
             </div>
         )
-    }
+    })
 }
-
-export default ContactDetails;

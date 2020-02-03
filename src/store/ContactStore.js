@@ -7,8 +7,12 @@ class ContactStore {
     @observable filterBy = '';
 
     loadContacts = async () => {
-        const contacts = await ContactService.getContacts(this.filterBy);
-        runInAction(() => this.contacts = contacts);
+        try {
+            const contacts = await ContactService.getContacts(this.filterBy);
+            runInAction(() => this.contacts = contacts);
+        } catch (err) {
+            console.log(err);
+        }
     }
 
     @action setFilter = (filterBy) => {
@@ -17,19 +21,27 @@ class ContactStore {
     }
 
     editContact = async (contact) => {
-        contact = await ContactService.saveContact(contact);
-        runInAction(() => {
-            const idx = this.contacts.findIndex(cntcs => cntcs._id === contact._id);
-            (idx === -1) ? this.contacts.push(contact) : this.contacts[idx] = contact;
-        });
+        try {
+            contact = await ContactService.saveContact(contact);
+            runInAction(() => {
+                const idx = this.contacts.findIndex(cntcs => cntcs._id === contact._id);
+                (idx === -1) ? this.contacts.push(contact) : this.contacts[idx] = contact;
+            });
+        } catch (err) {
+            console.log(err);
+        }
     }
 
     deleteContact = async (id) => {
-        await ContactService.deleteContact(id);
-        runInAction(() => {
-            const idx = this.contacts.findIndex(contact => contact._id === id);
-            if (idx !== -1) this.contacts.splice(idx, 1);
-        })
+        try {
+            await ContactService.deleteContact(id);
+            runInAction(() => {
+                const idx = this.contacts.findIndex(contact => contact._id === id);
+                if (idx !== -1) this.contacts.splice(idx, 1);
+            });
+        } catch (err) {
+            console.log(err);
+        }
     }
 
     getContactById = async (id) => {

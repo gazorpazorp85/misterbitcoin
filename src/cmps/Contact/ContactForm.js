@@ -1,57 +1,58 @@
-import React, { Component } from 'react';
-import { observable } from 'mobx';
-import { observer } from 'mobx-react'; 
+import React, { useContext, useEffect, useState } from 'react';
 
-@observer
-class ContactForm extends Component {
+import StoreContext from '../../store';
 
-    @observable contact = this.props.contact;
+import ContactService from '../../service/ContactService';
 
-    componentDidMount() {
-        this.setFormDataForEdit();
+function ContactForm(props) {
+
+    const ContactStore = useContext(StoreContext).ContactStore;
+    const [contact, setContact] = useState(ContactService.getEmptyContact);
+
+    const loadContact = async () => {
+        const id = props.match.params.id;
+        try {
+            await ContactStore.getContactById(id);
+            const contact = ContactStore.currContact;
+            setContact(contact);
+        } catch (err) {
+            console.log(err);
+        }
     }
 
-    componentDidUpdate(prevProps) {
-        if (prevProps.contact !== this.props.contact) this.setFormDataForEdit();
-    }
+    useEffect(() => {
+        loadContact();
+    }, [props.match.params.id]);
 
-    setFormDataForEdit() {
-        const { contact } = this.props;
-        this.contact = contact;
-    }
-
-    onSave = (ev) => {
+    const onSave = (ev) => {
         ev.preventDefault();
-        this.props.onSave(this.contact);
+        props.onSave(contact);
     }
 
-    goBack = () => {
-        (this.contact) ?
-            this.props.history.push(`/contact/${this.contact._id}`) :
-            this.props.history.push('/contact');
+    const goBack = () => {
+        (contact) ?
+            props.history.push(`/contact/${contact._id}`) :
+            props.history.push('/contact');
     }
 
-    inputChange = (ev) => {
+    const inputChange = (ev) => {
         let { name, value } = ev.target;
-        this.contact[name] = value;
+        setContact({ ...contact, [name]: value });
     }
-
-    render() {
         return (
             <div className="flex full column center align-center main-container">
                 <div className='flex column align-center contact-form'>
                     <input type="text" placeholder="Please Enter Full Name" name="name"
-                        onChange={this.inputChange} value={this.contact.name}></input>
+                        onChange={inputChange} value={contact.name} />
                     <input type="text" placeholder="Please Enter Email Address" name="email"
-                        onChange={this.inputChange} value={this.contact.email}></input>
+                        onChange={inputChange} value={contact.email} />
                     <input type="text" placeholder="Please Enter Phone Number" name="phone"
-                        onChange={this.inputChange} value={this.contact.phone}></input>
-                    <div className="capitalize button pointer contact-btn" onClick={this.onSave}>save</div>
-                    <div className="capitalize button pointer contact-btn" onClick={this.goBack}>back</div>
+                        onChange={inputChange} value={contact.phone} />
+                    <div className="capitalize button pointer contact-btn" onClick={onSave}>save</div>
+                    <div className="capitalize button pointer contact-btn" onClick={goBack}>back</div>
                 </div>
             </div>
         )
-    }
 }
 
 export default ContactForm;

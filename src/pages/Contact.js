@@ -1,28 +1,21 @@
-import React, { Component } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { observer, inject } from 'mobx-react';
+import { useObserver } from 'mobx-react';
+
+import StoreContext from '../store';
 
 import ContactList from '../cmps/Contact/ContactList';
 import ContactFilter from '../cmps/Contact/ContactFilter';
 
-@inject('ContactStore')
-@observer
-class Contact extends Component {
+function Contact(props) {
 
-    componentDidMount() {
-        this.loadContacts();
-    }
+    const ContactStore = useContext(StoreContext).ContactStore;
+    
+    useEffect(() => {
+        ContactStore.loadContacts();
+    });
 
-    loadContacts = () => {
-        try {
-            this.props.ContactStore.loadContacts();
-        }
-        catch (err) {
-            console.log(err);
-        }
-    }
-
-    render() {
+    return useObserver(() => {
         return (
             <div className="overflow full flex column">
                 <div className="flex column justify-center main-container">
@@ -31,13 +24,13 @@ class Contact extends Component {
                         <div className="button pointer add-contact-btn">
                             <Link className="capitalize" to={`/contact/edit`}>add contact</Link>
                         </div>
-                        <ContactFilter onFilter={this.props.ContactStore.setFilter} />
+                        <ContactFilter onFilter={ContactStore.setFilter} />
                     </div>
-                    <ContactList contacts={this.props.ContactStore.contacts} />
+                    <ContactList contacts={ContactStore.contacts} />
                 </div>
             </div>
         )
-    }
+    })
 }
 
 export default Contact
