@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
+import { observable } from 'mobx';
+import { observer } from 'mobx-react'; 
 
-export default class ContactForm extends Component {
-    state = {
-        contact: {
-            name: '',
-            email: '',
-            phone: ''
-        }
-    }
+@observer
+class ContactForm extends Component {
+
+    @observable contact = this.props.contact;
 
     componentDidMount() {
         this.setFormDataForEdit();
@@ -19,23 +17,23 @@ export default class ContactForm extends Component {
 
     setFormDataForEdit() {
         const { contact } = this.props;
-        if (contact) this.setState({ contact });
+        this.contact = contact;
     }
 
-    onSave = () => {
-        this.props.onSave(this.state.contact);
+    onSave = (ev) => {
+        ev.preventDefault();
+        this.props.onSave(this.contact);
     }
 
     goBack = () => {
-        (this.props.contact) ?
-            this.props.history.push(`/contact/${this.props.contact._id}`) :
+        (this.contact) ?
+            this.props.history.push(`/contact/${this.contact._id}`) :
             this.props.history.push('/contact');
     }
 
     inputChange = (ev) => {
-        let field = ev.target.name;
-        let value = ev.target.value;
-        this.setState({ contact: { ...this.state.contact, [field]: value } })
+        let { name, value } = ev.target;
+        this.contact[name] = value;
     }
 
     render() {
@@ -43,15 +41,17 @@ export default class ContactForm extends Component {
             <div className="flex full column center align-center main-container">
                 <div className='flex column align-center contact-form'>
                     <input type="text" placeholder="Please Enter Full Name" name="name"
-                        onChange={this.inputChange} value={this.state.contact.name}></input>
+                        onChange={this.inputChange} value={this.contact.name}></input>
                     <input type="text" placeholder="Please Enter Email Address" name="email"
-                        onChange={this.inputChange} value={this.state.contact.email}></input>
+                        onChange={this.inputChange} value={this.contact.email}></input>
                     <input type="text" placeholder="Please Enter Phone Number" name="phone"
-                        onChange={this.inputChange} value={this.state.contact.phone}></input>
+                        onChange={this.inputChange} value={this.contact.phone}></input>
                     <div className="capitalize button pointer contact-btn" onClick={this.onSave}>save</div>
-                    <div className="capitalize button pointer contact-btn" onClick={this.goBack}>Back</div>
+                    <div className="capitalize button pointer contact-btn" onClick={this.goBack}>back</div>
                 </div>
             </div>
         )
     }
 }
+
+export default ContactForm;

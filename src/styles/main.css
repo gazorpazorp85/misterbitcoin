@@ -216,8 +216,6 @@ input {
   width: 600px;
 }
 
-
-
 /* cmps and pages */
 
 .main {
@@ -295,6 +293,6 @@ input {
 
 @media (min-width: 960px) {
   .main-container {
-    min-width: 960px;
+    width: 1000px;
   }
 }

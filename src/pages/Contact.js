@@ -1,50 +1,43 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import { observer, inject } from 'mobx-react';
 
 import ContactList from '../cmps/Contact/ContactList';
 import ContactFilter from '../cmps/Contact/ContactFilter';
 
-import ContactService from '../service/ContactService';
-
-export default class ContactPage extends Component {
-    state = {
-        contacts: [],
-        filterBy: {
-            term: '',
-            name: '',
-            email: '',
-            phone: ''
-        }
-    }
+@inject('ContactStore')
+@observer
+class Contact extends Component {
 
     componentDidMount() {
         this.loadContacts();
     }
 
     loadContacts = () => {
-        ContactService.getContacts(this.state.filterBy)
-            .then(contacts => this.setState({ contacts }))
-            .catch((err) => this.props.history.push('/'));
-    }
-
-    onFilter = (filterBy) => {
-        this.setState(prevState => ({ filterBy: { ...prevState.filterBy, ...filterBy } }), this.loadContacts);
+        try {
+            this.props.ContactStore.loadContacts();
+        }
+        catch (err) {
+            console.log(err);
+        }
     }
 
     render() {
         return (
             <div className="overflow full flex column">
                 <div className="flex column justify-center main-container">
-                    <h1 className="flex center">Contacts</h1>
+                    <h1 className="flex center capitalize">contacts</h1>
                     <div className="flex space-between align-center">
                         <div className="button pointer add-contact-btn">
                             <Link className="capitalize" to={`/contact/edit`}>add contact</Link>
                         </div>
-                        <ContactFilter onFilter={this.onFilter} filterBy={this.state.filterBy} />
+                        <ContactFilter onFilter={this.props.ContactStore.setFilter} />
                     </div>
-                    <ContactList contacts={this.state.contacts} />
+                    <ContactList contacts={this.props.ContactStore.contacts} />
                 </div>
             </div>
         )
     }
 }
+
+export default Contact

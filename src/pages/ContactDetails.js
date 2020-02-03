@@ -1,12 +1,9 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import { observer, inject } from 'mobx-react';
 
-import ContactService from '../service/ContactService';
-
-export default class ContactDetailsPage extends Component {
-    state = {
-        contact: null
-    }
+@inject('ContactStore')
+@observer class ContactDetails extends Component {
 
     componentDidMount() {
         this.loadContact();
@@ -19,42 +16,42 @@ export default class ContactDetailsPage extends Component {
         }
     }
 
-    loadContact() {
+    loadContact = () => {
         const { id } = this.props.match.params;
-        ContactService.getContactById(id)
-            .then(contact => this.setState({ contact }));
+        this.props.ContactStore.getContactById(id)
+        
     }
 
     goBack = () => {
         this.props.history.push('/contact');
     }
 
-    onDelete = () => {
-        ContactService.deleteContact(this.state.contact._id)
-            .then(() => this.props.history.push('/contact'));
+    onDelete = async () => {
+        const { _id } = this.props.ContactStore.currContact;
+        await this.props.ContactStore.deleteContact(_id);
+        this.props.history.push('/contact');
     }
 
     render() {
-        if (!this.state.contact) return <div>Loading...</div>
-        const { contact } = this.state;
+        const { _id, name, email, phone } = this.props.ContactStore.currContact;
         return (
             <div className="flex column full main-container">
                 <div className="flex center order-0">
                     <div className="flex column align-center img-container">
-                        <img src={`https://robohash.org/${contact._id}.png`} />
+                        <img src={`https://robohash.org/${_id}.png`} alt={`${name}`} />
                     </div>
                     <div>
                         <div className="flex column center align-center img-details-container">
-                            <h2>name: {contact.name}</h2>
-                            <h4>email: {contact.email}</h4>
-                            <h4>phone: {contact.phone}</h4>
+                            <h2>name: {name}</h2>
+                            <h4>email: {email}</h4>
+                            <h4>phone: {phone}</h4>
                         </div>
                     </div>
                 </div>
                 <div className="flex center order-1 contact-buttons-container main-container">
                     <div className="capitalize button pointer contact-btn" onClick={this.goBack}>back to list</div>
                     <div className="button pointer contact-btn">
-                        <Link className="capitalize" to={`/contact/edit/${contact._id}`}>edit details</Link>
+                        <Link className="capitalize" to={`/contact/edit/${_id}`}>edit details</Link>
                     </div>
                     <div className="capitalize button pointer contact-btn" onClick={this.onDelete}>delete contact</div>
                 </div>
@@ -62,3 +59,5 @@ export default class ContactDetailsPage extends Component {
         )
     }
 }
+
+export default ContactDetails;
