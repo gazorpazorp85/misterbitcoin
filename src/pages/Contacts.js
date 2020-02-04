@@ -7,13 +7,13 @@ import StoreContext from '../store';
 import ContactList from '../cmps/Contact/ContactList';
 import ContactFilter from '../cmps/Contact/ContactFilter';
 
-function Contact(props) {
+function Contacts(props) {
 
     const ContactStore = useContext(StoreContext).ContactStore;
     
     useEffect(() => {
         ContactStore.loadContacts();
-    });
+    }, []);
 
     return useObserver(() => {
         return (
@@ -33,4 +33,4 @@ function Contact(props) {
     })
 }
 
-export default Contact
+export default Contacts

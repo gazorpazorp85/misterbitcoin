@@ -11,7 +11,7 @@ export default function NavBar() {
                 </NavLink>
                 </div>
                 <div>
-                    <NavLink activeClassName="active" className="capitalize" to='/contact' exact>
+                    <NavLink activeClassName="active" className="capitalize" to='/contacts' exact>
                         contacts
                 </NavLink>
                 </div>

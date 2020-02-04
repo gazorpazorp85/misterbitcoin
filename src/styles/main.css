@@ -152,6 +152,11 @@ a {
   margin: 10px;
 }
 
+.button:hover {
+  background-color: black;
+  color: white;
+}
+
 input {
   text-indent: 5px;
   width: 18rem;

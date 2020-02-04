@@ -3,7 +3,6 @@ import { observable, action, runInAction } from 'mobx';
 
 class ContactStore {
     @observable contacts = [];
-    @observable currContact = {};
     @observable filterBy = '';
 
     loadContacts = async () => {
@@ -46,11 +45,9 @@ class ContactStore {
 
     getContactById = async (id) => {
         try {
-            const contact = await ContactService.getContactById(id);
-            runInAction(() => this.currContact = contact);
+            return await ContactService.getContactById(id);
         } catch {
-            const contact = ContactService.getEmptyContact();
-            runInAction(() => this.currContact = contact);
+            return ContactService.getEmptyContact();
         }
     }
 }
